@@ -15,7 +15,7 @@ Manager.
 HELIOS Profile API is one of the HELIOS Core APIs as highlighted in
 the picture below:
 
-![HELIOS Profile API](doc/images/helios-profile.png "Profile API")
+![HELIOS Profile API](https://raw.githubusercontent.com/helios-h2020/h.core-Profile/master/doc/images/helios-profile.png "Profile API")
 
 ## API usage ##
 
