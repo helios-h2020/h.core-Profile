@@ -3,14 +3,17 @@ package eu.h2020.helios_social.core.profile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
+import eu.h2020.helios_social.core.messaging.HeliosIdentityInfo;
 import eu.h2020.helios_social.core.security.HeliosCryptoManager;
 import eu.h2020.helios_social.core.security.HeliosKeyStoreException;
 import eu.h2020.helios_social.core.security.HeliosKeyStoreManager;
@@ -26,6 +29,7 @@ import eu.h2020.helios_social.core.security.HeliosKeyStoreManager;
 public class HeliosProfileManager {
     private static final HeliosProfileManager ourInstance = new HeliosProfileManager();
     private static final String TAG = "HeliosProfileManager";
+    private String mUserIdKeyName;
 
     /**
      * Get the singleton instance of the class.
@@ -52,11 +56,11 @@ public class HeliosProfileManager {
 
             Log.d(TAG, "Check security operations");
             cryptoManager = HeliosCryptoManager.getInstance();
-            SecretKey aesKey = cryptoManager.generateAESKey();
             if (cryptoManager == null) {
                 Log.e(TAG, "Failed to get HeliosCryptoManager!!!");
                 return;
             }
+            SecretKey aesKey = cryptoManager.generateAESKey();
             keyManager = new HeliosKeyStoreManager(appContext);
             if (keyManager == null) {
                 Log.e(TAG, "Failed to get HeliosKeyStoreManager!!!");
@@ -97,6 +101,45 @@ public class HeliosProfileManager {
     }
 
     /**
+     * Check and initialize a userId value
+     * @param activity Activity that is used to initialize the userId
+     * @param resource Key name that is bind to a userId
+     * @return String representing the userId
+     */
+    public String identityInit(Activity activity, String resource) {
+        mUserIdKeyName = new String(resource);
+        String userId = load(activity, resource, android.content.Context.MODE_PRIVATE);
+        if (userId.isEmpty()) {
+            userId = UUID.randomUUID().toString();
+            store(activity, resource, userId, android.content.Context.MODE_PRIVATE);
+            Log.d(TAG, "Initialization, userId not found, now set as " + userId);
+        } else {
+            Log.d(TAG, "Initialization, userId was set as " + userId);
+        }
+        HeliosUserData.getInstance().setValue(resource, userId);
+        return userId;
+    }
+
+    /**
+     * Get identity information (username and id)
+     * @param context Application context
+     * @return HeliosIdentityInfo containing nickname and userId
+     */
+    public HeliosIdentityInfo getIdentityInfo(Context context) {
+        String userId = HeliosUserData.getInstance().getValue(mUserIdKeyName);
+        if ((userId == null) || userId.isEmpty()) {
+                Log.d(TAG, "UserId not found in HeliosUserData");
+        }
+        String userName = load(context, "username");
+        if ((userName == null) || userName.isEmpty()) {
+            userName = new String(userId);
+        }
+        HeliosIdentityInfo info = new HeliosIdentityInfo(userName, userId);
+        Log.d(TAG, "FOUND: " + info.getNickname() + " " + info.getUserUUID());
+        return info;
+    }
+
+    /**
      * Load a value from the profile using {@link PreferenceManager#getDefaultSharedPreferences(Context)}.
      * Saves the loaded value to {@link HeliosUserData}.
      *
@@ -123,7 +166,7 @@ public class HeliosProfileManager {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -157,6 +200,6 @@ public class HeliosProfileManager {
         SharedPreferences sharedPrefs = activity.getPreferences(mode);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 }

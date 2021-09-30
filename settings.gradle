@@ -1,3 +1,2 @@
-include ':app', ':lib', ':security'
-project(':security').projectDir = new File("../h.core-SecurityAndPrivacyManager/lib")
+include ':app', ':lib'
 rootProject.name='ProfileTestApplication'

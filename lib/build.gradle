@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 28
-        versionCode 2
-        versionName "0.2.0"
+        minSdkVersion 26
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -24,18 +22,14 @@ android {
 
 }
 
-configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute module("eu.h2020.helios_social.core.security:security") with project(':security')
-    }
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation project(':security')
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.preference:preference:1.1.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'eu.h2020.helios_social.core.security:security:1.0.3'
+    implementation 'eu.h2020.helios_social.core.messaging:messaging:1.1.11'
 }

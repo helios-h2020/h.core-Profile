@@ -1,5 +1,6 @@
 package eu.h2020.helios_social.core.profiletestapplication;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,10 +9,14 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 import eu.h2020.helios_social.core.profile.HeliosUserData;
 
@@ -29,12 +34,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView textView = (TextView)findViewById(R.id.txt_area);
+                textView.setMovementMethod(new ScrollingMovementMethod());
                 textView.append("\n");
                 HeliosUserData.getInstance().setValue("test1", "value1");
                 HeliosUserData.getInstance().setValue("test2", "value2");
                 HeliosUserData.getInstance().setValue("test3", "value3");
                 String result;
                 boolean found;
+
+                textView.append(VersionUtils.getAndroidVersion() + "\n" + VersionUtils.getDeviceName() + "\n");
+                String now = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+                textView.append("Profile test sequence run on " + now + "\n");
 
                 result = HeliosUserData.getInstance().getValue("test1");
                 if ((result != null) && result.equals("value1")) {
@@ -79,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     textView.append("[FAIL]  Test key 3 has not been removed\n");
                 }
+                textView.append("\n\n");
                 HeliosUserData.getInstance().removeKey("test2");
                 HeliosUserData.getInstance().removeKey("test1");
 
@@ -104,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_clear_view) {
+            TextView textView = (TextView)findViewById(R.id.txt_area);
+            textView.setText("");
             return true;
         }
 

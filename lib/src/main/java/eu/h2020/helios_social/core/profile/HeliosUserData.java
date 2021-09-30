@@ -1,6 +1,9 @@
 package eu.h2020.helios_social.core.profile;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User data cache related to {@link HeliosProfileManager}.
@@ -8,7 +11,7 @@ import java.util.HashMap;
 public class HeliosUserData {
     private static final String TAG = "HeliosUserData";
     private static final HeliosUserData ourInstance = new HeliosUserData();
-    private HashMap<String, String> config = new HashMap<String, String>();
+    private Map<String, String> config;
 
     /**
      * Get the singleton of the HeliosUserData
@@ -19,6 +22,7 @@ public class HeliosUserData {
     }
 
     private HeliosUserData() {
+        this.config =  Collections.synchronizedMap(new HashMap<String, String>());
     }
 
     /**
@@ -62,6 +66,7 @@ public class HeliosUserData {
      * @return String array of keys.
      */
     public String[] getKeys() {
-        return (String[])config.keySet().toArray();
+        Set<String> keyset = config.keySet();
+        return keyset.toArray(new String[0]);
     }
 }
