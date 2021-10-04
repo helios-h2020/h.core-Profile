@@ -159,6 +159,11 @@ implementation 'eu.h2020.helios_social.core.security:security:1.0.3'
 implementation 'eu.h2020.helios_social.core.messaging:messaging:2.0.15'
 ```
 
+If the software module wants to use the profile module then the following line should
+be put to the module specific build.gradle file:
+
+    implementation 'eu.h2020.helios_social.core.profile:profile:1.0.11
+
 ## Android Studio project structure ##
 
 This Android Studio Arctic Fox 2020.3.1 Patch 2 project contains the
