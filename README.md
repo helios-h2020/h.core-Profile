@@ -145,7 +145,7 @@ And the variables of Nexus's credentials are stored locally at
 heliosUser=username
 heliosPassword=password
 ```
-To request Nexus username and password, contact Atos.
+To request Nexus username and password, contact Atos (jordi.hernandezv@atos.net).
 
 ### How to use the dependencies ###
 
@@ -156,7 +156,7 @@ security and messaging module and their respective versions:
 
 ```
 implementation 'eu.h2020.helios_social.core.security:security:1.0.3'
-implementation 'eu.h2020.helios_social.core.messaging:messaging:1.1.11'
+implementation 'eu.h2020.helios_social.core.messaging:messaging:2.0.15'
 ```
 
 ## Android Studio project structure ##
